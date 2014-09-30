@@ -147,13 +147,17 @@ init_mathjax = function() {
     if (window.MathJax) {
         // MathJax loaded
         MathJax.Hub.Config({
+            TeX: {
+                extensions: ["AMSmath.js"],
+                equationNumbers: { autoNumber: "AMS", useLabelIds: true}
+                },
             tex2jax: {
                 inlineMath: [ ['$','$'], ["\\(","\\)"] ],
                 displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
             },
-            displayAlign: 'left', // Change this to 'center' to center equations.
+            displayAlign: 'center', // Change this to 'center' to center equations.
             "HTML-CSS": {
-                styles: {'.MathJax_Display': {"margin": 0}}
+                styles: {'.MathJax_Display': {"margin": 4}}
             }
         });
         MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
@@ -297,6 +301,8 @@ def notebook(preprocessor, tag, markup):
         nb_text = f.read()
     nb_json = nbformat.reads_json(nb_text)
     (body, resources) = exporter.from_notebook_node(nb_json)
+    # To make the higlighting work with Ipython 2.X
+    resources['inlining']['css'][1]=resources['inlining']['css'][1].replace('highlight','highlight-ipynb')
 
     # if we haven't already saved the header, save it here.
     if not notebook.header_saved:
